@@ -7,7 +7,7 @@ module GetComment
   # Web App
   class App < Roda
     plugin :render, engine: 'slim', views: 'app/views'
-    plugin :assets, css: 'style.css', js: 'table_row.js', path: 'app/views/assets'
+    plugin :assets, path: 'app/views/assets', css: 'style.css', js: 'table_row.js'
     plugin :halt
 
     route do |routing|
