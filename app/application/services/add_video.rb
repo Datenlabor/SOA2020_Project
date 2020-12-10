@@ -8,8 +8,8 @@ module GetComment
     class AddVideo
       include Dry::Transaction
       step :parse_url
-      step :find_video
-      step :store_video
+      step :request_video
+      step :reify_video
 
       private
 
@@ -23,29 +23,20 @@ module GetComment
         end
       end
 
-      def find_video(input)
-        if (video = video_in_database(input))
-          input[:local_video] = video
-        else
-          input[:remote_video] = video_from_youtube(input)
-          input[:remote_comment] = comment_from_youtube(input)
-        end
-        Success(input)
+      def request_video(input)
+        result = Gateway::Api.new(GetComment::App.config).add_video(input[:video_id])
+        result.success? ? Success(result.payload) : Failure(result.message)
       rescue StandardError => e
-        Failure(e.to_s)
+        puts e.inspect + '\n' + e.backtrace
+        Failure('Cannot add projects right now; please try again later')
       end
 
-      def store_video(input)
-        video =
-          if input[:remote_video]
-            store_video_comment(input)
-          else
-            input[:local_video]
-          end
-        Success(video)
-      rescue StandardError => e
-        puts e.backtrace.join("\n")
-        Failure('Having trouble accessing the database')
+      def reify_video(video_json)
+        Representer::Video.new(OpenStruct.new)
+          .from_json(video_json)
+          .then { |video| Success(video) }
+      rescue StandardError
+        Failure('Error in the video -- please try again')
       end
 
       # following are support methods that other services could use
@@ -54,30 +45,6 @@ module GetComment
         regex = %r{(?:youtube(?:-nocookie)?\.com/(?:[^/\n\s]+/\S+/|(?:v|e(?:mbed)?)/|\S*?[?&]v=)|youtu\.be/)([a-zA-Z0-9_-]{11})}
         match = regex.match(youtube_url)
         match[1] if match
-      end
-
-      def video_from_youtube(input)
-        Youtube::VideoMapper.new(App.config.YT_TOKEN)
-                            .extract(input[:video_id])
-      rescue StandardError
-        raise 'Could not find that video on Youtube'
-      end
-
-      def video_in_database(input)
-        Repository::For.klass(Entity::Video).find_by_video_id(input[:video_id])
-      end
-
-      def comment_from_youtube(input)
-        Youtube::CommentMapper.new(App.config.YT_TOKEN).extract(input[:video_id])
-      rescue StandardError
-        raise 'Could not find comments on Youtube'
-      end
-
-      def store_video_comment(input)
-        video = Repository::For.entity(input[:remote_video]).create(input[:remote_video])
-        Repository::For.klass(Entity::Comment)
-                       .create_many_of_one_video(input[:remote_comment], video.video_db_id)
-        video
       end
     end
   end
