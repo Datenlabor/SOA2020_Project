@@ -27,14 +27,14 @@ module GetComment
         result = Gateway::Api.new(GetComment::App.config).add_video(input[:video_id])
         result.success? ? Success(result.payload) : Failure(result.message)
       rescue StandardError => e
-        puts e.inspect + '\n' + e.backtrace
+        puts "#{e.inspect}\\n#{e.backtrace}"
         Failure('Cannot add projects right now; please try again later')
       end
 
       def reify_video(video_json)
         Representer::Video.new(OpenStruct.new)
-          .from_json(video_json)
-          .then { |video| Success(video) }
+                          .from_json(video_json)
+                          .then { |video| Success(video) }
       rescue StandardError
         Failure('Error in the video -- please try again')
       end

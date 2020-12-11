@@ -23,7 +23,7 @@ module GetComment
       def reify_list(videos_json)
         Representer::VideosList.new(OpenStruct.new)
                                .from_json(videos_json)
-                               .then{ |videos| Success(videos) }
+                               .then { |videos| Success(videos) }
       rescue StandardError
         Failure('Cannot parse response from api')
       end

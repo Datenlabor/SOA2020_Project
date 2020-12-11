@@ -22,8 +22,8 @@ module GetComment
 
       def reify_comments(comment_json)
         Representer::Comments.new(OpenStruct.new)
-          .from_json(comment_json)
-          .then { |comment| Success(comment) }
+                             .from_json(comment_json)
+                             .then { |comment| Success(comment) }
       rescue StandardError
         Failure('Error in the video -- please try again')
       end
