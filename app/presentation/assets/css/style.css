@@ -104,17 +104,34 @@ a:hover {
 }
 
 .emotion {
-	/* fill: white; */
 	width: 48px;
 	height: 48px;
 	border-radius: 50%;
+	cursor: pointer;
 }
+
+.emotion.deactivate {
+	background-color: #666;
+}
+
 .happy-button {
 	background: green;
 	margin-left: 530px;
 }
+.happy-button:hover {
+	background: rgba(0, 255, 0, 0.3);
+}
+
 .sad-button {
 	background: red;
+}
+
+.sad-button:hover {
+	background: rgba(255, 0, 0, 0.3);
+}
+
+.not-show {
+	display: none;
 }
 
 p {

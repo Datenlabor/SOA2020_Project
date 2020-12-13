@@ -25,5 +25,9 @@ module Views
     def emotion?
       @comment.polarity >= 0.5
     end
+
+    def sentiment
+      emotion? ? 'positive' : 'negative'
+    end
   end
 end
