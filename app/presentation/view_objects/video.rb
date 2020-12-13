@@ -19,7 +19,7 @@ module Views
     end
 
     def img
-      "http://img.youtube.com/vi/#{id}/mqdefault.jpg"
+      "http://img.youtube.com/vi/#{id}/maxresdefault.jpg"
     end
   end
 end

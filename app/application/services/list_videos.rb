@@ -14,7 +14,7 @@ module GetComment
       private
 
       def get_api_list(video_list)
-        result = Gateway::Api.new(GetComment::App.config).video_list(video_list)
+        result = Gateway::Api.new(GetComment::App.config).get_videos(video_list)
         result.success? ? Success(result.payload) : Failure(result.message)
       rescue StandardError
         Failure('Cannot access api')

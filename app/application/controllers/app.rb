@@ -37,7 +37,7 @@ module GetComment
         else
           videos = result.value!
           flash.now[:notice] = 'Let\'s Go Search!' if videos.none?
-          video_list = Views::AllVideos.new(videos)
+          video_list = Views::AllVideos.new(videos[:videos])
         end
 
         view 'history', locals: { videos: video_list }
@@ -65,8 +65,13 @@ module GetComment
           # GET /comment/{video_id}/
           routing.get do
             # Load comments
-            yt_comments = Service::Comment.new.call(video_id: video_id)
-            all_comments = Views::AllComments.new(yt_comments, video_id)
+            result = Service::Comment.new.call(video_id: video_id)
+            if result.failure?
+              flash[:error] = result.failure
+              routing.redirect '/'
+            end
+            yt_comments = result.value!
+            all_comments = Views::AllComments.new(yt_comments[:comments], video_id)
             all_comments.classification
             view 'comments', locals: { comments: all_comments }
           end
