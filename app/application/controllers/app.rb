@@ -65,8 +65,7 @@ module GetComment
           # GET /comment/{video_id}/
           routing.get do
             # Load comments
-            yt_comments = Repository::For.klass(Entity::Comment)
-                                         .find_by_video_id(video_id)
+            yt_comments = Service::Comment.new.call(video_id: video_id)
             all_comments = Views::AllComments.new(yt_comments, video_id)
             all_comments.classification
             view 'comments', locals: { comments: all_comments }

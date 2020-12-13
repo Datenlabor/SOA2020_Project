@@ -5,7 +5,7 @@ require 'json'
 # require_relative 'comment'
 
 module GetComment
-  module Youtube
+  module Gateway
     # Infrastructure to call Our API
     class Api
       def initialize(config)
