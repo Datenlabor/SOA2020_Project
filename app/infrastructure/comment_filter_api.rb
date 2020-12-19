@@ -41,7 +41,7 @@ module GetComment
         end
 
         def get_videos(video_list)
-          call_api('get', ['comments'],
+          call_api('get', ['videos'],
                    'list' => Value::WatchedList.to_encoded(video_list))
         end
 

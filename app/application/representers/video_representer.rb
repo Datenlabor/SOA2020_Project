@@ -16,7 +16,7 @@ module GetComment
       property :video_id
       property :title
 
-      link :self do
+      link :comments do
         "#{App.config.API_HOST}/api/v1/comments/#{video_id}"
       end
 
