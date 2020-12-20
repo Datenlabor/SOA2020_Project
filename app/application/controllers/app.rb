@@ -7,6 +7,7 @@ require 'slim/include'
 module GetComment
   # Web App
   class App < Roda
+    include RouteHelpers
     plugin :render, engine: 'slim', views: 'app/presentation/views_html'
     plugin :assets, css: 'style.css', js: 'main.js',
                     path: 'app/presentation/assets'
@@ -70,8 +71,15 @@ module GetComment
               flash[:error] = result.failure
               routing.redirect '/'
             end
-            yt_comments = result.value!
-            all_comments = Views::AllComments.new(yt_comments[:comments], video_id)
+            yt_comments = OpenStruct.new(result.value!)
+            if yt_comments.response.processing?
+              flash[:notice] = 'Comments are analyzing, please try again later.'
+              routing.redirect '/'
+            end
+            analyze_comments = yt_comments.analyzed
+            # yt_comments = result.value!
+            all_comments = Views::AllComments.new(analyze_comments[:comments], video_id)
+            response.expires 60, public: true
             all_comments.classification
             view 'comments', locals: { comments: all_comments }
           end
