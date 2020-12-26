@@ -74,14 +74,18 @@ module GetComment
             yt_comments = OpenStruct.new(result.value!)
             if yt_comments.response.processing?
               flash[:notice] = 'Comments are analyzing, please try again later.'
-              routing.redirect '/'
+            else
+              analyze_comments = yt_comments.analyzed
+              all_comments = Views::AllComments
+                             .new(analyze_comments[:comments], video_id)
+              all_comments.classification
+              response.expires 60, public: true if App.environment == :produciton
             end
-            analyze_comments = yt_comments.analyzed
-            # yt_comments = result.value!
-            all_comments = Views::AllComments.new(analyze_comments[:comments], video_id)
-            response.expires 60, public: true
-            all_comments.classification
-            view 'comments', locals: { comments: all_comments }
+            processing = Views::CommentProcessing.new(
+              App.config, yt_comments.response
+            )
+            view 'comments', locals: { comments: all_comments, 
+                                       processing: processing }
           end
         end
       end
