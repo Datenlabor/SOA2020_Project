@@ -7,7 +7,6 @@ require 'slim/include'
 module GetComment
   # Web App
   class App < Roda
-    include RouteHelpers
     plugin :render, engine: 'slim', views: 'app/presentation/views_html'
     plugin :assets, css: 'style.css', js: 'main.js',
                     path: 'app/presentation/assets'
