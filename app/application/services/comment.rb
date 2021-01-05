@@ -15,13 +15,15 @@ module GetComment
 
       def retrieve_comments(input)
         input[:response] = Gateway::Api.new(GetComment::App.config).get_comments(input[:video_id])
-        input[:response].success? ? Success(input.payload) : Failure(input[:response].message)
+        puts "==DEBUG== input success?: #{input.inspect}"
+        input[:response].success? ? Success(input) : Failure(input[:response].message)
       rescue StandardError
         Failure('Cannot get comments right now; please try again later')
       end
 
       def reify_comments(input)
         # puts comment_json
+        puts "==DEBUG== #{input[:response].processing?}"
         unless input[:response].processing?
           Representer::CommentsList.new(OpenStruct.new)
                                    .from_json(input[:response].payload)

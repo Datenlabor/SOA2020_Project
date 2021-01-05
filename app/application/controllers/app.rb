@@ -48,16 +48,17 @@ module GetComment
           # GET /comment/
           routing.post do
             url_request = Forms::NewVideo.new.call(routing.params)
-            video_made = Service::AddVideo.new.call(url_request)
+            video = Service::Video.new.call(url_request)
 
-            if video_made.failure?
-              flash[:error] = video_made.failure
+            if video.failure?
+              flash[:error] = video.failure
               routing.redirect '/'
             end
 
-            video = video_made.value!
-            session[:watching].insert(0, video.video_id).uniq!
-            routing.redirect "comments/#{video.video_id}"
+            video = video.value!
+            puts video[:video_id]
+            session[:watching].insert(0, video[:video_id]).uniq!
+            routing.redirect "comments/#{video[:video_id]}"
           end
         end
 
@@ -65,7 +66,18 @@ module GetComment
           # GET /comment/{video_id}/
           routing.get do
             # Load comments
-            result = Service::Comment.new.call(video_id: video_id)
+            video_made = Service::AddVideo.new.call(video_id: video_id)
+            if video_made.failure?
+              flash[:error] = video_made.failure
+              routing.redirect '/'
+            end
+
+            video = video_made.value!
+            if video.response.processing?
+              flash[:notice] = 'Comments are analyzing, please try again later.'
+            end
+            result = Service::Comment.new.call(video_id: video.video_id)
+            puts "==DEBUG== result.failure: #{result.failure}"
             if result.failure?
               flash[:error] = result.failure
               routing.redirect '/'

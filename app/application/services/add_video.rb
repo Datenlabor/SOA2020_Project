@@ -7,21 +7,21 @@ module GetComment
     # Add video in database
     class AddVideo
       include Dry::Transaction
-      step :parse_url
+      # step :parse_url
       step :request_video
       step :reify_video
 
       private
 
       # Helper function for extracting video_id from YouTube url
-      def parse_url(input)
-        if input.success?
-          video_id = youtube_id(input[:youtube_url])
-          Success(video_id: video_id)
-        else
-          Failure("URL #{input.errors.messages.first}")
-        end
-      end
+      # def parse_url(input)
+      #   if input.success?
+      #     video_id = youtube_id(input[:youtube_url])
+      #     Success(video_id: video_id)
+      #   else
+      #     Failure("URL #{input.errors.messages.first}")
+      #   end
+      # end
 
       def request_video(input)
         result = Gateway::Api.new(GetComment::App.config).add_video(input[:video_id])
