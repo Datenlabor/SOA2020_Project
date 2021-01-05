@@ -12,16 +12,16 @@ header.h-100.default-page
           aria-valuemax="100" style="width:0%"]
         script src = "#{processing.ws_javascript}"
         javascript:
-          var channel = "#{processing.ws_channel_id}";
-          var client = new Faye.Client("#{processing.ws_route}");
+          var channel = `${processing.ws_channel_id}`;
+          var client = new Faye.Client(`${processing.ws_route}`);
           var bar = document.getElementsByClassName("progress-bar")[0];
           var reg = /\:(\d+)%/
           client.subscribe('/' + channel, function(message) {
             // Collect progressbar element and percentage
             var progress = bar.getAttribute("style")
             var currentProgress = reg.exec(progress)[1]
-            
             if (isNaN(message)) {
+              console.log(`Current progress = ${message}`)
               bar.setAttribute("style", "width:100%")
               bar.setAttribute("class", "progress-bar bg-danger progress-bar-striped")
               bar.innerHTML = message
