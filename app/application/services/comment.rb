@@ -15,7 +15,6 @@ module GetComment
 
       def retrieve_comments(input)
         input[:response] = Gateway::Api.new(GetComment::App.config).get_comments(input[:video_id])
-        puts "==DEBUG== input success?: #{input.inspect}"
         input[:response].success? ? Success(input) : Failure(input[:response].message)
       rescue StandardError
         Failure('Cannot get comments right now; please try again later')
@@ -23,7 +22,6 @@ module GetComment
 
       def reify_comments(input)
         # puts comment_json
-        puts "==DEBUG== #{input[:response].processing?}"
         unless input[:response].processing?
           Representer::CommentsList.new(OpenStruct.new)
                                    .from_json(input[:response].payload)
@@ -32,11 +30,6 @@ module GetComment
         Success(input)
       rescue StandardError
         Failure('Error in the video -- please try again')
-      #   Representer::CommentsList.new(OpenStruct.new)
-      #                            .from_json(comment_json)
-      #                            .then { |comment| Success(comment) }
-      # rescue StandardError
-      #   Failure('Error in the video -- please try again')
       end
     end
   end

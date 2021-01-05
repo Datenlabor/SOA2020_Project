@@ -3,8 +3,8 @@ header.h-100.default-page
     nav.navbar.navbar-light.fixed-top.nav-top
       a.title.text-light href="/" YouTube Comment Filter 
     .container.content-part.ml-5.mb-5
-      .row.w-100
-        .col-md-8.col-sm-6 id="YouTubeVideoPlayer" data-obj='#{comments.video_id}'
+      / .row.w-100
+      /   .col-md-8.col-sm-6 id="YouTubeVideoPlayer" data-obj='#{comments.video_id}'
       - if processing.in_progress?
         .progress
         .progress-bar.bg-success.progress-bar-striped.active[
@@ -41,6 +41,8 @@ header.h-100.default-page
             }
           });
       - else
+        .row.w-100
+          .col-md-8.col-sm-6 id="YouTubeVideoPlayer" data-obj='#{comments.video_id}'
         .row
           .col-md-8.col-sm-6.mt-3
             button.emotion.happy-button.border-0.d-inline type="button" id="goodBtn" onclick="filterComment('positive')"
