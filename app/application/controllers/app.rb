@@ -30,16 +30,20 @@ module GetComment
         # Get videos from sessions
         puts "==DEBUG== Data in session is: #{session[:watching]}"
 
-        result = Service::ListVideos.new.call(session[:watching])
-        if result.failure?
-          flash[:error] = result.failure
+        if session[:watching].none?
+          flash.now[:notice] = 'Let\'s Fo Search!'
           video_list = []
         else
-          videos = result.value!.videos
-          flash.now[:notice] = 'Let\'s Go Search!' if videos.none?
-          video_list = Views::AllVideos.new(videos)
+          result = Service::ListVideos.new.call(session[:watching])
+          if result.failure?
+            flash[:error] = result.failure
+            routing.redirect '/'
+          else
+            videos = result.value!
+            flash.now[:notice] = 'Let\'s Fo Search!' if videos[:videos].nil?
+            video_list = Views::AllVideos.new(videos[:videos])
+          end
         end
-
         view 'history', locals: { videos: video_list }
       end
 
@@ -65,7 +69,7 @@ module GetComment
           # GET /comment/{video_id}/
           routing.get do
             # Add video and comments
-            video_made = Service::AddVideo.new.call(video_id: video_id)
+            video_made = Service::AddVideo.new.call(video_id: video_id, watched_list: session[:watching])
 
             if video_made.failure?
               flash[:error] = video_made.failure
@@ -74,7 +78,7 @@ module GetComment
 
             video = OpenStruct.new(video_made.value!)
             if video.response.processing?
-              flash.now[:notice] = 'Comments are analyzing, please try again later.'
+              flash.now[:notice] = 'Comments are analyzing......'
             else
               # Load comments
               result = Service::Comment.new.call(video_id: video.video_id)
@@ -90,27 +94,9 @@ module GetComment
               all_comments.classification
               response.expires 60, public: true if App.environment == :produciton
             end
-
-            # Load comments
-            # result = Service::Comment.new.call(video_id: video.video_id)
-            # if result.failure?
-            #   flash[:error] = result.failure
-            #   routing.redirect '/'
-            # end
-            # yt_comments = OpenStruct.new(result.value!)
-
-            # analyze_comments = yt_comments.analyzed
-            # all_comments = Views::AllComments.new(analyze_comments[:comments],
-            #                                       video_id)
-            # all_comments.classification
-
-            # processing = Views::CommentProcessing.new(
-            #   App.config, yt_comments.response
-            # )
             processing = Views::CommentProcessing.new(
               App.config, video.response
             )
-            puts "PROCESS: #{processing.in_progress?}"
             view 'comments', locals: { comments: all_comments,
                                        processing: processing }
           end

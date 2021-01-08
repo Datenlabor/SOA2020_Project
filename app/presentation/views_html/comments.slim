@@ -1,46 +1,15 @@
 header.h-100.default-page
   .d-flex.flex-column.justify-content-center.default-page
     nav.navbar.navbar-light.fixed-top.nav-top
-      a.title.text-light href="/" YouTube Comment Filter 
-    .container.content-part.ml-5.mb-5
-      / .row.w-100
-      /   .col-md-8.col-sm-6 id="YouTubeVideoPlayer" data-obj='#{comments.video_id}'
-      - if processing.in_progress?
-        .progress
-        .progress-bar.bg-success.progress-bar-striped.active[
-          role="progressbar" aria-valuenow="10" aria-valuemin="0"
-          aria-valuemax="100" style="width:0%"]
-        script src = "#{processing.ws_javascript}"
-        javascript:
-          var channel = `${processing.ws_channel_id}`;
-          var client = new Faye.Client(`${processing.ws_route}`);
-          var bar = document.getElementsByClassName("progress-bar")[0];
-          var reg = /\:(\d+)%/
-          client.subscribe('/' + channel, function(message) {
-            // Collect progressbar element and percentage
-            var progress = bar.getAttribute("style")
-            var currentProgress = reg.exec(progress)[1]
-            if (isNaN(message)) {
-              console.log(`Current progress = ${message}`)
-              bar.setAttribute("style", "width:100%")
-              bar.setAttribute("class", "progress-bar bg-danger progress-bar-striped")
-              bar.innerHTML = message
-            } else {
-              if (parseInt(message) > parseInt(currentProgress)) {
-                // Set the progress bar and percentage
-                bar.setAttribute("aria-valuenow", message)
-                bar.setAttribute("style", "width:"+message+"%")
-                bar.innerHTML = message+"%"
-                // Reload page at 100%
-                if (message == "100") {
-                  setTimeout(function () {
-                    window.location = window.location.href
-                  }, 1000);
-                }
-              }
-            }
-          });
-      - else
+      a.title.text-light href="/" YouTube Comment Filter
+    - if processing.in_progress? 
+      .container id="loader"
+      javascript:
+        setTimeout(function(){ 
+          window.location.reload(1);
+        }, 5000);
+    - else
+      .container.content-part.ml-5.mb-5.animate-bottom
         .row.w-100
           .col-md-8.col-sm-6 id="YouTubeVideoPlayer" data-obj='#{comments.video_id}'
         .row

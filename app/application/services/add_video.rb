@@ -7,21 +7,20 @@ module GetComment
     # Add video in database
     class AddVideo
       include Dry::Transaction
-      # step :parse_url
+      step :validate_video
       step :request_video
       step :reify_video
 
       private
 
       # Helper function for extracting video_id from YouTube url
-      # def parse_url(input)
-      #   if input.success?
-      #     video_id = youtube_id(input[:youtube_url])
-      #     Success(video_id: video_id)
-      #   else
-      #     Failure("URL #{input.errors.messages.first}")
-      #   end
-      # end
+      def validate_video(input)
+        if input[:watched_list].include? input[:video_id]
+          Success(input)
+        else
+          Failure('Please first request this project to be added to your list')
+        end
+      end
 
       def request_video(input)
         input[:response] = Gateway::Api.new(GetComment::App.config).add_video(input[:video_id])
@@ -40,14 +39,6 @@ module GetComment
         Success(input)
       rescue StandardError
         Failure('Error in the video -- please try again')
-      end
-
-      # following are support methods that other services could use
-
-      def youtube_id(youtube_url)
-        regex = %r{(?:youtube(?:-nocookie)?\.com/(?:[^/\n\s]+/\S+/|(?:v|e(?:mbed)?)/|\S*?[?&]v=)|youtu\.be/)([a-zA-Z0-9_-]{11})}
-        match = regex.match(youtube_url)
-        match[1] if match
       end
     end
   end
