@@ -93,7 +93,7 @@ module GetComment
         end
 
         def message
-          payload['message']
+          JSON.parse(payload)['message']
         end
 
         def payload

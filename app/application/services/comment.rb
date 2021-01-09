@@ -21,7 +21,6 @@ module GetComment
       end
 
       def reify_comments(input)
-        # puts comment_json
         unless input[:response].processing?
           Representer::CommentsList.new(OpenStruct.new)
                                    .from_json(input[:response].payload)

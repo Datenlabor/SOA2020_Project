@@ -146,31 +146,6 @@ p {
 	font-family: 'Noto Sans TC', sans-serif;
 }
 
-#loader {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	z-index: 1;
-	width: 120px;
-	height: 120px;
-	margin: -76px 0 0 -76px;
-	border: 16px solid #f3f3f3;
-	border-radius: 50%;
-	border-top: 16px solid #3498db;
-	-webkit-animation: spin 2s linear infinite;
-	animation: spin 2s linear infinite;
-}
-  
-@-webkit-keyframes spin {
-	0% { -webkit-transform: rotate(0deg); }
-	100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
-}
-
 /* Add animation to "page content" */
 .animate-bottom {
 	position: relative;
@@ -190,7 +165,44 @@ p {
 	to{ bottom:0; opacity:1 }
 }
 
-#myDiv {
-	display: none;
-	text-align: center;
+.loading{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.percent{
+  color: #999;
+  font-size: 100px;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.progress-bar{
+  height: 21px;
+  background: #111;
+  border-radius: 13px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+.progress{
+  width: 10%;
+  height: 15px;
+  background: #f60d54;
+  border-radius: 13px;
+}
+
+.text-blink{
+  animation: animate .7s ease-in-out .1s;
+}
+@keyframes animate {
+  0%{
+    opacity: 1;
+  }
+  50%{
+    opacity: 0.2;
+  }
+  100%{
+    opacity: 1;
+  }
 }
