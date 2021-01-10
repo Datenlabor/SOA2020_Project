@@ -145,3 +145,64 @@ p {
 .alert {
 	font-family: 'Noto Sans TC', sans-serif;
 }
+
+/* Add animation to "page content" */
+.animate-bottom {
+	position: relative;
+	-webkit-animation-name: animatebottom;
+	-webkit-animation-duration: 1s;
+	animation-name: animatebottom;
+	animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+	from { bottom:-100px; opacity:0 } 
+	to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+	from{ bottom:-100px; opacity:0 } 
+	to{ bottom:0; opacity:1 }
+}
+
+.loading{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.percent{
+  color: #999;
+  font-size: 100px;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.progress-bar{
+  height: 21px;
+  background: #111;
+  border-radius: 13px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+.progress{
+  width: 10%;
+  height: 15px;
+  background: #f60d54;
+  border-radius: 13px;
+}
+
+.text-blink{
+  animation: animate .7s ease-in-out .1s;
+}
+@keyframes animate {
+  0%{
+    opacity: 1;
+  }
+  50%{
+    opacity: 0.2;
+  }
+  100%{
+    opacity: 1;
+  }
+}

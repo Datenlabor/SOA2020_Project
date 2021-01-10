@@ -41,7 +41,7 @@ module GetComment
         end
 
         def get_videos(video_list)
-          call_api('get', ['comments'],
+          call_api('get', ['videos'],
                    'list' => Value::WatchedList.to_encoded(video_list))
         end
 
@@ -76,8 +76,24 @@ module GetComment
           code.between?(SUCCESS_CODES.first, SUCCESS_CODES.last)
         end
 
+        def failure?
+          !success?
+        end
+
+        def ok?
+          code == 200
+        end
+
+        def added?
+          code == 201
+        end
+
+        def processing?
+          code == 202
+        end
+
         def message
-          payload['message']
+          JSON.parse(payload)['message']
         end
 
         def payload
