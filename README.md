@@ -1,4 +1,4 @@
-https://img.shields.io/badge/ruby-2.7.2-orange
+![Ruby 2.7.2](https://img.shields.io/badge/ruby-2.7.2-orange)
 
 # YCF - Youtube Comment Filter
 A solution for users to have a comfortable environment to enjoy their video time.
@@ -23,11 +23,13 @@ In our product, we try to solve the problem by using Machine Learning algorithm.
 ## Usage
 
 STEP1: Clone the Youtube_Comment_Filter
+
 ` git clone https://github.com/Datenlabor/api-Youtube_Comment_Filter.git `
 
 STEP2: Set your Youtube developer api key in `config/secrets.yml`
 
 STEP3: Run the Web application
+
 ` rake rerack `
 
 ## Spec
