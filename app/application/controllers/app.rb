@@ -31,7 +31,7 @@ module GetComment
         puts "==DEBUG== Data in session is: #{session[:watching]}"
 
         if session[:watching].none?
-          flash.now[:notice] = 'Let\'s Fo Search!'
+          flash.now[:notice] = 'Let\'s Go Search!'
           video_list = []
         else
           result = Service::ListVideos.new.call(session[:watching])
