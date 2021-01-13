@@ -1,3 +1,5 @@
+[![Ruby 2.7.2](https://img.shields.io/badge/ruby-2.7.2-orange)](https://www.ruby-lang.org/en/news/2020/10/02/ruby-2-7-2-released/)
+
 # YCF - Youtube Comment Filter
 A solution for users to have a comfortable environment to enjoy their video time.
 
@@ -18,6 +20,22 @@ In our product, we try to solve the problem by using Machine Learning algorithm.
 - Try to speedup
 - Try to get more comments dynamically
 
+## Installation
+
+STEP1: Clone the Youtube_Comment_Filter
+
+` git clone https://github.com/Datenlabor/Youtube_Comment_Filter.git `
+
+STEP2: Set your Youtube developer api key in `config/secrets.yml`
+
+STEP3: Run the Web application
+
+` rake rerack `
+
+## Spec
+
+If you want to spec the code. Please run ` rake spec `
+
 
 ## Requirement
 
@@ -25,6 +43,7 @@ In order to run the snownlp/textblob for comment analysis, please install the fo
 
 -   pip3 install snownlp
 -   pip3 install textblob
+-   pip3 install googletrans==4.0.0-rc1
 
 ## Resource
 
